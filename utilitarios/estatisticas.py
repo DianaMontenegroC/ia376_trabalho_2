@@ -66,3 +66,8 @@ def criar_tabela(dados:list, nome:str) -> None:
     df = pd.DataFrame(dicionario_final)
     df.to_csv(Path(caminho.tabelas, nome), index = False)
 
+def para_dataframe(dados:dict) -> "DataFrame":
+    """
+    Transforma dicionario em DataFrame
+    """
+    return pd.DataFrame(dados)

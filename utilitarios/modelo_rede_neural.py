@@ -19,7 +19,7 @@ tf.config.experimental.enable_op_determinism()
 tf.random.set_seed(2025)
 ######################################################################
 
-def rede_neural(dados, X:list, y:str, neuronios:int = 32):
+def rede_neural(dados, X:list, y:str, neuronios:int = 32, monitoramento:str = "val_loss", validacao:float = 0.2, slope:float = 0.01):
     """
     Treina modelo de rede neural
     """
@@ -37,7 +37,7 @@ def rede_neural(dados, X:list, y:str, neuronios:int = 32):
     # Rede
     modelo = Sequential([Input(shape = (X.shape[1],)),
                          Dense(neuronios),
-                         LeakyReLU(negative_slope = 0.01),
+                         LeakyReLU(negative_slope = slope),
                          Dense(1)])
 
     modelo.compile(optimizer = "adam",
@@ -48,14 +48,14 @@ def rede_neural(dados, X:list, y:str, neuronios:int = 32):
         modelo.load_weights(caminho_pesos)
     else:
         # Treina o modelo
-        early_stop = EarlyStopping(monitor = "val_loss",
+        early_stop = EarlyStopping(monitor = monitoramento,
                                    patience = 30,
                                    restore_best_weights = True)
 
         historico = modelo.fit(X, y,
                                epochs = 1000, # Número máximo de épocas
                                batch_size = 8,
-                               validation_split = 0.2,
+                               validation_split = validacao,
                                callbacks = [early_stop],
                                verbose=0)
 
